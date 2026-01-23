@@ -16,8 +16,6 @@
 		],
 	},
 
-	///////////////////////////////////
-	// DEFAULT MENU
 	{
 		path: '/dashboard',
 		name: 'Dashboard',
@@ -42,20 +40,13 @@
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
 	},
+	{
+		path: '/products',
+		name: 'Quản lý sản phẩm',
+		icon: 'ShoppingCartOutlined',
+		component: './Product',
+	},
 
-	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
 
 	{
 		path: '/notification',
