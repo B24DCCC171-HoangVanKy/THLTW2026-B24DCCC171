@@ -1,181 +1,147 @@
-import { useMemo, useState } from 'react';
-import {
-	Button,
-	Form,
-	Input,
-	InputNumber,
-	message,
-	Modal,
-	Popconfirm,
-	Space,
-	Table,
-} from 'antd';
+	import title from '@/locales/vi-VN/global/title';
+import rules from '@/utils/rules';
+	import { PlusOutlined } from '@ant-design/icons';
+	import { Popconfirm, Table, message, Button, Modal, Form, Input, InputNumber } from 'antd';
+	import { useState } from 'react';
+	import { useModel } from 'umi';
 
-type Product = {
-	id: number;
-	name: string;
-	price: number;
-	quantity: number;
-};
+	const Product = () => {
+		const [bienThamChieuForm] = Form.useForm();
+		const { danhSachSanPham, setDanhSachSanPham } = useModel('sanpham');
+		const [open, setOpen] = useState(false);
+		const [sanPhamDangSua, setSanPhamDangSua] = useState({
+			name: '',
+			quantity: 0,
+			price: 0,
+			id: 99999,
+		});
+		const cot = [
+			{
+				title: 'STT',
+				dataIndex: 'id',
+				width: 200,
+				align: 'center',
+			},
+			{
+				title: 'Tên sản phẩm',
+				dataIndex: 'name',
+				width: 200,
+				render: (value, record) => {
+					console.log('value', value);
+					console.log('record', record);
+					return <b style={{ color: 'red' }}>{record.name}</b>;
+				},
+			},
+			{
+				title: 'Giá sản phẩm',
+				dataIndex: 'price',
+				width: 200,
+				align: 'center',
+			},
+			{
+				title: 'Số lượng sản phẩm',
+				dataIndex: 'quantity',
+				width: 200,
+				align: 'center',
+			},
+			{
+				title: 'Thao tác',
+				width: 200,
+				align: 'center',
+				render: (value, record) => (
+					<>
+						<Popconfirm
+							title='Bạn có chắc chắn muốn xóa sản phẩm này không?'
+							onConfirm={() => {
+								const danhSachSanPhamMoi = danhSachSanPham.filter((item) => item.id !== record.id);
+								setDanhSachSanPham(danhSachSanPhamMoi);
+								// alert('Xóa sản phẩm thành công!');
+								message.info('Xóa sản phẩm thành công!');
+							}}
+							// onCancel={cancel}
+							okText='Có'
+							cancelText='Không'
+						>
+							<a href='#'>Xóa</a>
+						</Popconfirm>
+						<a
+							onClick={() => {
+								setOpen(true);
+								setSanPhamDangSua(record);
+								bienThamChieuForm.setFieldsValue(record);
+							}}
+							style={{ marginLeft: 8 }}
+							href='#'
+						>
+							Sửa
+						</a>
+					</>
+				),
+			},
+		];
 
-const initialProducts: Product[] = [
-	{ id: 1, name: 'Laptop Dell XPS 13', price: 25000000, quantity: 10 },
-	{ id: 2, name: 'iPhone 15 Pro Max', price: 30000000, quantity: 15 },
-	{ id: 3, name: 'Samsung Galaxy S24', price: 22000000, quantity: 20 },
-	{ id: 4, name: 'iPad Air M2', price: 18000000, quantity: 12 },
-	{ id: 5, name: 'MacBook Air M3', price: 28000000, quantity: 8 },
-];
-
-const ProductPage: React.FC = () => {
-	const [products, setProducts] = useState<Product[]>(initialProducts);
-	const [searchValue, setSearchValue] = useState<string>('');
-	const [visible, setVisible] = useState<boolean>(false);
-	const [form] = Form.useForm<Product>();
-
-	const filteredProducts = useMemo(() => {
-		const keyword = searchValue.trim().toLowerCase();
-		if (!keyword) return products;
-		return products.filter((item) => item.name.toLowerCase().includes(keyword));
-	}, [products, searchValue]);
-
-	const handleAddProduct = async () => {
-		try {
-			const values = await form.validateFields();
-			const nextId = products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
-			setProducts([...products, { ...values, id: nextId }]);
-			message.success('Thêm sản phẩm thành công');
-			setVisible(false);
-			form.resetFields();
-		} catch (error) {
-			// Validation errors are handled by Ant Design Form
-		}
-	};
-
-	const handleDeleteProduct = (id: number) => {
-		setProducts((prev) => prev.filter((item) => item.id !== id));
-		message.success('Xóa sản phẩm thành công');
-	};
-
-	const columns = [
-		{
-			title: 'STT',
-			key: 'index',
-			align: 'center' as const,
-			width: 80,
-			render: (_: Product, __: Product, index: number) => index + 1,
-		},
-		{
-			title: 'Tên sản phẩm',
-			dataIndex: 'name',
-			key: 'name',
-		},
-		{
-			title: 'Giá',
-			dataIndex: 'price',
-			key: 'price',
-			align: 'right' as const,
-			render: (value: number) => value.toLocaleString('vi-VN'),
-		},
-		{
-			title: 'Số lượng',
-			dataIndex: 'quantity',
-			key: 'quantity',
-			align: 'center' as const,
-		},
-		{
-			title: 'Thao tác',
-			key: 'action',
-			align: 'center' as const,
-			render: (_: Product, record: Product) => (
-				<Popconfirm
-					title='Bạn có chắc muốn xóa sản phẩm này?'
-					okText='Xóa'
-					cancelText='Hủy'
-					onConfirm={() => handleDeleteProduct(record.id)}
+		return (
+			<>
+				<h1>Quản lý sản phẩm</h1>
+				<Button
+					onClick={() => {
+						setOpen(true);
+					}}
+					style={{
+						marginBottom: 8,
+					}}
+					type='primary'
+					icon={<PlusOutlined />}
 				>
-					<Button danger size='small'>
-						Xóa
-					</Button>
-				</Popconfirm>
-			),
-		},
-	];
-
-	return (
-		<div>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Input.Search
-					placeholder='Tìm kiếm sản phẩm theo tên'
-					allowClear
-					value={searchValue}
-					onChange={(e) => setSearchValue(e.target.value)}
-					style={{ maxWidth: 360 }}
-				/>
-				<Button type='primary' onClick={() => setVisible(true)}>
-					Thêm sản phẩm
+					Thêm sản phẩm mới
 				</Button>
-			</Space>
-
-			<Table<Product> rowKey='id' columns={columns} dataSource={filteredProducts} pagination={false} />
-
-			<Modal
-				title='Thêm sản phẩm mới'
-				visible={visible}
-				onCancel={() => setVisible(false)}
-				onOk={handleAddProduct}
-				okText='Lưu'
-				cancelText='Hủy'
-				destroyOnClose
-			>
-				<Form<Product> layout='vertical' form={form} preserve={false}>
-					<Form.Item
-						label='Tên sản phẩm'
-						name='name'
-						rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
+				<Table columns={cot} dataSource={danhSachSanPham} />
+				<Modal
+					footer={false}
+					title='Basic Modal'
+					visible={open}
+					//  onOk={handleOk}
+					onCancel={() => {
+						setOpen(false);
+					}}
+				>
+					<Form
+						form={bienThamChieuForm}
+						onFinish={(values) => {
+							setDanhSachSanPham([...danhSachSanPham, { ...values, id: danhSachSanPham.length + 1 }]);
+							setOpen(false);
+							message.success('Thêm sản phẩm thành công');
+						}}
+						name='basic'
+						labelCol={{ span: 8 }}
+						wrapperCol={{ span: 16 }}
+						autoComplete='off'
 					>
-						<Input placeholder='Nhập tên sản phẩm' />
-					</Form.Item>
+						<Form.Item
+							initialValue={sanPhamDangSua.name}
+							label='Tên sản phẩm'
+							name='name'
+							rules={[{ required: true, message: 'Please input your username!' }]}
+						>
+							<Input />
+						</Form.Item>
 
-					<Form.Item
-						label='Giá'
-						name='price'
-						rules={[
-							{ required: true, message: 'Vui lòng nhập giá' },
-							{
-								type: 'number',
-								min: 1,
-								message: 'Giá phải là số dương',
-							},
-						]}
-					>
-						<InputNumber style={{ width: '100%' }} min={1} placeholder='Nhập giá sản phẩm' />
-					</Form.Item>
+						<Form.Item label='Giá' name='price' rules={[...rules.number(9999999999, 0)]}>
+							<InputNumber />
+						</Form.Item>
 
-					<Form.Item
-						label='Số lượng'
-						name='quantity'
-						rules={[
-							{ required: true, message: 'Vui lòng nhập số lượng' },
-							{
-								type: 'number',
-								min: 1,
-								transform: (value) => (value === undefined ? value : Number(value)),
-								message: 'Số lượng phải là số nguyên dương',
-							},
-						]}
-					>
-						<InputNumber
-							style={{ width: '100%' }}
-							min={1}
-							precision={0}
-							step={1}
-							placeholder='Nhập số lượng'
-						/>
-					</Form.Item>
-				</Form>
-			</Modal>
-		</div>
-	);
-};
+						<Form.Item rules={[...rules.number(9999999999, 0, false)]} name='quantity' label='Số lượng'>
+							<InputNumber />
+						</Form.Item>
 
-export default ProductPage;
+						<Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+							<Button type='primary' htmlType='submit'>
+								Submit
+							</Button>
+						</Form.Item>
+					</Form>
+				</Modal>
+			</>
+		);
+	};
+	export default Product;

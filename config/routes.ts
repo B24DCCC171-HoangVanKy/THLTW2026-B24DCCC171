@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -40,11 +40,23 @@
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
 	},
+	// {
+	// 	path: '/products',
+	// 	name: 'Quản lý sản phẩm',
+	// 	icon: 'ShoppingCartOutlined',
+	// 	component: './Product',
+	// },
 	{
-		path: '/products',
-		name: 'Quản lý sản phẩm',
-		icon: 'ShoppingCartOutlined',
-		component: './Product',
+		path: '/random-number',
+		name: 'Random Number',
+		icon: 'BulbOutlined',
+		component: './RandomNumber',
+	},
+	{
+		path: '/study-manager',
+		name: 'Study Manager',
+		icon: 'BookOutlined',
+		component: './StudyManager',
 	},
 
 
