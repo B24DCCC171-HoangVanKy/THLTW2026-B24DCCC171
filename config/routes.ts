@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -41,6 +41,18 @@
 		name: 'TodoList',
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
+	},
+	{
+		path: '/th02-bai1',
+		name: 'OanTuTi',
+		component: './TH02/Bai1',
+		icon: 'PlayCircleOutlined',
+	  },
+	{
+		path: '/th02-bai2',
+		name: 'NganHangCauHoi',
+		component: './TH02/Bai2',
+		icon: 'FileTextOutlined',
 	},
 
 	// DANH MUC HE THONG
