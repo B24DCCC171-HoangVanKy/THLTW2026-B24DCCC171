@@ -1,9 +1,10 @@
 import { createBooking, deleteBooking, getBookingList, updateBooking, updateBookingStatus } from '@/services/DatLichNhanh/booking';
+import { createReview, getReviewList } from '@/services/DatLichNhanh/review';
 import { getServiceList } from '@/services/DatLichNhanh/service';
 import { getStaffList } from '@/services/DatLichNhanh/staff';
-import type { TBooking, TBookingStatus, TCreateBooking, TService, TStaff, TWorkingHour } from '@/services/DatLichNhanh/types';
+import type { TBooking, TBookingStatus, TCreateBooking, TReview, TService, TStaff, TWorkingHour } from '@/services/DatLichNhanh/types';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Table, Tag, TimePicker, message } from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Table, Tag, TimePicker, message } from 'antd';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -62,18 +63,23 @@ const statusLabel: Record<TBookingStatus, { text: string; color: string }> = {
 
 const LichHenPage = () => {
 	const [bookings, setBookings] = useState<TBooking[]>([]);
+	const [reviews, setReviews] = useState<TReview[]>([]);
 	const [staff, setStaff] = useState<TStaff[]>([]);
 	const [services, setServices] = useState<TService[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [editing, setEditing] = useState<TBooking | null>(null);
 	const [form] = Form.useForm<TFormValues>();
+	const [openReview, setOpenReview] = useState(false);
+	const [reviewBooking, setReviewBooking] = useState<TBooking | null>(null);
+	const [reviewForm] = Form.useForm<{ rating: number; comment?: string }>();
 
 	const load = async () => {
 		setLoading(true);
 		try {
-			const [b, s, sv] = await Promise.all([getBookingList(), getStaffList(), getServiceList()]);
+			const [b, r, s, sv] = await Promise.all([getBookingList(), getReviewList(), getStaffList(), getServiceList()]);
 			setBookings(b.data ?? []);
+			setReviews(r.data ?? []);
 			setStaff(s.data ?? []);
 			setServices((sv.data ?? []).filter((x) => x.active !== false));
 		} finally {
@@ -87,6 +93,7 @@ const LichHenPage = () => {
 
 	const staffName = useMemo(() => new Map(staff.map((x) => [x.id, x.name])), [staff]);
 	const serviceName = useMemo(() => new Map(services.map((x) => [x.id, x.name])), [services]);
+	const reviewByBookingId = useMemo(() => new Map(reviews.map((x) => [x.bookingId, x])), [reviews]);
 
 	const validateBooking = (payload: TCreateBooking, ignoreId?: number) => {
 		const st = staff.find((x) => x.id === payload.staffId);
@@ -222,11 +229,31 @@ const LichHenPage = () => {
 			{
 				title: 'Thao tác',
 				key: 'action',
-				width: 260,
+				width: 340,
 				fixed: 'right' as const,
 				render: (_: any, r: TBooking) => (
 					<Space>
 						<Button type="link" icon={<EditOutlined />} onClick={() => onEdit(r)} />
+						<Button
+							type="link"
+							onClick={() => {
+								if (r.status !== 'COMPLETED') {
+									message.error('Chỉ đánh giá khi lịch hẹn đã hoàn thành');
+									return;
+								}
+								if (reviewByBookingId.has(r.id)) {
+									message.info('Lịch hẹn này đã được đánh giá');
+									return;
+								}
+								setReviewBooking(r);
+								reviewForm.resetFields();
+								reviewForm.setFieldsValue({ rating: 5 } as any);
+								setOpenReview(true);
+							}}
+							disabled={r.status !== 'COMPLETED'}
+						>
+							Đánh giá
+						</Button>
 						<Button
 							type="link"
 							onClick={async () => {
@@ -274,7 +301,7 @@ const LichHenPage = () => {
 				),
 			},
 		],
-		[serviceName, staffName],
+		[reviewByBookingId, reviewForm, serviceName, staffName],
 	);
 
 	return (
@@ -294,6 +321,41 @@ const LichHenPage = () => {
 				scroll={{ x: 1100 }}
 				pagination={{ pageSize: 10 }}
 			/>
+
+			<Modal
+				title="Đánh giá sau dịch vụ"
+				visible={openReview}
+				onCancel={() => setOpenReview(false)}
+				onOk={async () => {
+					if (!reviewBooking) return;
+					const values = await reviewForm.validateFields();
+					if (reviewByBookingId.has(reviewBooking.id)) return message.info('Lịch hẹn này đã được đánh giá');
+					await createReview({
+						bookingId: reviewBooking.id,
+						staffId: reviewBooking.staffId,
+						serviceId: reviewBooking.serviceId,
+						rating: values.rating,
+						comment: values.comment,
+						reply: '',
+						createdAt: new Date().toISOString(),
+					});
+					message.success('Đã gửi đánh giá');
+					setOpenReview(false);
+					load();
+				}}
+				okText="Gửi"
+				cancelText="Đóng"
+				destroyOnClose
+			>
+				<Form form={reviewForm} layout="vertical">
+					<Form.Item label="Số sao (1-5)" name="rating" rules={[{ required: true, message: 'Chọn số sao' }]}>
+						<InputNumber min={1} max={5} style={{ width: '100%' }} />
+					</Form.Item>
+					<Form.Item label="Nhận xét" name="comment">
+						<Input.TextArea rows={4} placeholder="Nhập nhận xét..." />
+					</Form.Item>
+				</Form>
+			</Modal>
 
 			<Modal
 				title={editing ? 'Sửa lịch hẹn' : 'Đặt lịch hẹn'}

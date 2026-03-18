@@ -41,3 +41,16 @@ export type TBooking = {
 
 export type TCreateBooking = Omit<TBooking, 'id'> & Partial<Pick<TBooking, 'id'>>;
 
+export type TReview = {
+	id: number;
+	bookingId: number;
+	staffId: number;
+	serviceId: number;
+	rating: number; // 1-5
+	comment?: string;
+	reply?: string;
+	createdAt: string; // ISO
+};
+
+export type TCreateReview = Omit<TReview, 'id'> & Partial<Pick<TReview, 'id'>>;
+

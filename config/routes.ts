@@ -60,6 +60,12 @@ export default [
 		icon: 'CalendarOutlined',
 		component: './DatLichNhanh/LichHen',
 	},
+	{
+		path: '/dat-lich/danh-gia',
+		name: 'DanhGia',
+		icon: 'StarOutlined',
+		component: './DatLichNhanh/DanhGia',
+	},
 
 	// DANH MUC HE THONG
 	// {
