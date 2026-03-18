@@ -24,3 +24,20 @@ export type TService = {
 
 export type TCreateService = Omit<TService, 'id'> & Partial<Pick<TService, 'id'>>;
 
+export type TBookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+
+export type TBooking = {
+	id: number;
+	customerName: string;
+	customerPhone?: string;
+	staffId: number;
+	serviceId: number;
+	date: string; // YYYY-MM-DD
+	startTime: string; // HH:mm
+	endTime: string; // HH:mm
+	status: TBookingStatus;
+	note?: string;
+};
+
+export type TCreateBooking = Omit<TBooking, 'id'> & Partial<Pick<TBooking, 'id'>>;
+

@@ -54,6 +54,12 @@ export default [
 		icon: 'AppstoreOutlined',
 		component: './DatLichNhanh/DichVu',
 	},
+	{
+		path: '/dat-lich/lich-hen',
+		name: 'LichHen',
+		icon: 'CalendarOutlined',
+		component: './DatLichNhanh/LichHen',
+	},
 
 	// DANH MUC HE THONG
 	// {
