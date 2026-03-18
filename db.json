@@ -4,7 +4,109 @@
       "name": "Hoàng Văn Kỳ",
       "phone": "0974433959",
       "maxBookingsPerDay": 4,
-      "id": 1
+      "id": 1,
+      "workingHours": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 3,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 4,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 5,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        }
+      ]
+    },
+    {
+      "name": "Hoàng Cửu Bảo",
+      "phone": "0123123123",
+      "workingHours": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 3,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 4,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 5,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 6,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        }
+      ],
+      "id": 2
+    },
+    {
+      "name": "Trịnh Trần Phương Tuấn",
+      "phone": "090303031",
+      "maxBookingsPerDay": 3,
+      "workingHours": [
+        {
+          "dayOfWeek": 1,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 2,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 3,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 4,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 5,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        },
+        {
+          "dayOfWeek": 6,
+          "startTime": "09:00",
+          "endTime": "17:00"
+        }
+      ],
+      "id": 3
     }
   ],
   "services": [
@@ -21,8 +123,59 @@
       "price": 10000000,
       "active": true,
       "id": 2
+    },
+    {
+      "name": "Gội đầu",
+      "duration": 15,
+      "price": 50000,
+      "active": true,
+      "id": 3
     }
   ],
-  "bookings": [],
-  "reviews": []
+  "bookings": [
+    {
+      "customerName": "Đặng Tuấn Anh",
+      "customerPhone": "0123456789",
+      "staffId": 1,
+      "serviceId": 1,
+      "date": "2026-03-18",
+      "startTime": "09:00",
+      "endTime": "09:30",
+      "status": "COMPLETED",
+      "id": 1
+    },
+    {
+      "customerName": "Kylian Mpape",
+      "customerPhone": "0987654321",
+      "staffId": 3,
+      "serviceId": 2,
+      "date": "2026-03-18",
+      "startTime": "12:00",
+      "endTime": "12:05",
+      "status": "COMPLETED",
+      "id": 2
+    }
+  ],
+  "reviews": [
+    {
+      "bookingId": 1,
+      "staffId": 1,
+      "serviceId": 1,
+      "rating": 5,
+      "comment": "Đẹp trai",
+      "reply": "Cảm ơn quý khách",
+      "createdAt": "2026-03-18T03:46:52.636Z",
+      "id": 1
+    },
+    {
+      "bookingId": 2,
+      "staffId": 3,
+      "serviceId": 2,
+      "rating": 1,
+      "comment": "Đánh khách",
+      "reply": "Khách không trả tiền\n",
+      "createdAt": "2026-03-18T04:15:05.330Z",
+      "id": 2
+    }
+  ]
 }

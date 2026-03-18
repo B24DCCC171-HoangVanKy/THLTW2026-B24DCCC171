@@ -66,6 +66,12 @@ export default [
 		icon: 'StarOutlined',
 		component: './DatLichNhanh/DanhGia',
 	},
+	{
+		path: '/dat-lich/thong-ke',
+		name: 'ThongKe',
+		icon: 'BarChartOutlined',
+		component: './DatLichNhanh/ThongKe',
+	},
 
 	// DANH MUC HE THONG
 	// {
