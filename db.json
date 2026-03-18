@@ -1,0 +1,28 @@
+{
+  "staff": [
+    {
+      "name": "Hoàng Văn Kỳ",
+      "phone": "0974433959",
+      "maxBookingsPerDay": 4,
+      "id": 1
+    }
+  ],
+  "services": [
+    {
+      "name": "Cắt tóc",
+      "duration": 30,
+      "price": 100000,
+      "active": true,
+      "id": 1
+    },
+    {
+      "name": "Mát gần ",
+      "duration": 5,
+      "price": 10000000,
+      "active": true,
+      "id": 2
+    }
+  ],
+  "bookings": [],
+  "reviews": []
+}
