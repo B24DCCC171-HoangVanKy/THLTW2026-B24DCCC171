@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -41,6 +41,18 @@
 		name: 'TodoList',
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
+	},
+	{
+		path: '/dat-lich/nhan-vien',
+		name: 'NhanVien',
+		icon: 'TeamOutlined',
+		component: './DatLichNhanh/NhanVien',
+	},
+	{
+		path: '/dat-lich/dich-vu',
+		name: 'DichVu',
+		icon: 'AppstoreOutlined',
+		component: './DatLichNhanh/DichVu',
 	},
 
 	// DANH MUC HE THONG
