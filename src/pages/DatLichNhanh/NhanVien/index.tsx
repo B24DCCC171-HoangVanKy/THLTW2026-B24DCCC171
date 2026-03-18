@@ -1,7 +1,8 @@
 import { createStaff, deleteStaff, getStaffList, updateStaff } from '@/services/DatLichNhanh/staff';
 import type { TCreateStaff, TStaff, TWorkingHour } from '@/services/DatLichNhanh/types';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, InputNumber, Modal, Popconfirm, Space, Table, Tag, message } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Popconfirm, Select, Space, Table, Tag, TimePicker, message } from 'antd';
+import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 
 const dayLabel = (d?: number) => {
@@ -29,36 +30,59 @@ type TFormValues = {
 	name: string;
 	phone?: string;
 	maxBookingsPerDay?: number;
-	workingHoursText?: string;
+	workingHours?: { dayOfWeek: number; start: moment.Moment; end: moment.Moment }[];
 };
 
-const parseWorkingHours = (text?: string): TWorkingHour[] | undefined => {
-	const raw = (text ?? '').trim();
-	if (!raw) return undefined;
+const toMinutes = (m: moment.Moment) => m.hours() * 60 + m.minutes();
 
-	// Format: "1 09:00-17:00; 5 09:00-12:00" (day start-end; ...)
-	const parts = raw
-		.split(';')
-		.map((x) => x.trim())
-		.filter(Boolean);
+const defaultWorkingHours = (): { dayOfWeek: number; start: moment.Moment; end: moment.Moment }[] =>
+	[1, 2, 3, 4, 5, 6].map((d) => ({
+		dayOfWeek: d,
+		start: moment('09:00', 'HH:mm'),
+		end: moment('17:00', 'HH:mm'),
+	}));
 
-	const result: TWorkingHour[] = [];
-	for (const p of parts) {
-		const [dayStr, timeStr] = p.split(/\s+/);
-		const day = Number(dayStr);
-		if (!day || !timeStr) continue;
-		const [startTime, endTime] = timeStr.split('-');
-		if (!startTime || !endTime) continue;
-		result.push({ dayOfWeek: day, startTime: startTime.trim(), endTime: endTime.trim() });
+const toWorkingHours = (val?: { dayOfWeek: number; start: moment.Moment; end: moment.Moment }[]): TWorkingHour[] | undefined => {
+	if (!val?.length) return undefined;
+	const out: TWorkingHour[] = val
+		.filter((x) => x?.dayOfWeek && x?.start && x?.end)
+		.map((x) => ({
+			dayOfWeek: x.dayOfWeek,
+			startTime: x.start.format('HH:mm'),
+			endTime: x.end.format('HH:mm'),
+		}));
+	return out.length ? out : undefined;
+};
+
+const validateNoOverlapWorkingHours = (val?: { dayOfWeek: number; start: moment.Moment; end: moment.Moment }[]) => {
+	if (!val?.length) return Promise.resolve();
+
+	const byDay = new Map<number, { start: moment.Moment; end: moment.Moment }[]>();
+	for (const slot of val) {
+		if (!slot?.dayOfWeek || !slot?.start || !slot?.end) continue;
+		if (!byDay.has(slot.dayOfWeek)) byDay.set(slot.dayOfWeek, []);
+		byDay.get(slot.dayOfWeek)!.push({ start: slot.start, end: slot.end });
 	}
-	return result.length ? result : undefined;
-};
 
-const formatWorkingHours = (workingHours?: TWorkingHour[]) => {
-	if (!workingHours?.length) return '';
-	return workingHours
-		.map((w) => `${w.dayOfWeek} ${w.startTime}-${w.endTime}`)
-		.join('; ');
+	for (const [day, slots] of byDay.entries()) {
+		// Check start < end
+		for (const s of slots) {
+			if (toMinutes(s.start) >= toMinutes(s.end)) {
+				return Promise.reject(new Error(`Giờ bắt đầu phải nhỏ hơn giờ kết thúc (Thứ ${day})`));
+			}
+		}
+
+		const sorted = [...slots].sort((a, b) => toMinutes(a.start) - toMinutes(b.start));
+		for (let i = 1; i < sorted.length; i++) {
+			const prev = sorted[i - 1];
+			const cur = sorted[i];
+			if (toMinutes(cur.start) < toMinutes(prev.end)) {
+				return Promise.reject(new Error(`Các ca không được trùng nhau trong cùng 1 ngày (Thứ ${day + 1})`));
+			}
+		}
+	}
+
+	return Promise.resolve();
 };
 
 const NhanVienPage = () => {
@@ -126,7 +150,11 @@ const NhanVienPage = () => {
 									name: record.name,
 									phone: record.phone,
 									maxBookingsPerDay: record.maxBookingsPerDay,
-									workingHoursText: formatWorkingHours(record.workingHours),
+								workingHours: (record.workingHours ?? []).map((w) => ({
+									dayOfWeek: w.dayOfWeek,
+									start: moment(w.startTime, 'HH:mm'),
+									end: moment(w.endTime, 'HH:mm'),
+								})),
 								});
 								setOpen(true);
 							}}
@@ -153,6 +181,7 @@ const NhanVienPage = () => {
 	const onCreate = () => {
 		setEditing(null);
 		form.resetFields();
+		form.setFieldsValue({ workingHours: defaultWorkingHours() } as any);
 		setOpen(true);
 	};
 
@@ -162,7 +191,7 @@ const NhanVienPage = () => {
 			name: values.name,
 			phone: values.phone,
 			maxBookingsPerDay: values.maxBookingsPerDay,
-			workingHours: parseWorkingHours(values.workingHoursText),
+			workingHours: toWorkingHours(values.workingHours) ?? toWorkingHours(defaultWorkingHours()),
 		};
 
 		if (editing) {
@@ -212,12 +241,80 @@ const NhanVienPage = () => {
 					<Form.Item label="Số khách tối đa/ngày" name="maxBookingsPerDay">
 						<InputNumber min={1} style={{ width: '100%' }} placeholder="Ví dụ: 5" />
 					</Form.Item>
+					<Form.List name="workingHours">
+						{(fields, { add, remove }) => (
+							<>
+								<div style={{ marginBottom: 8, color: '#666' }}>Lịch làm việc theo tuần (T2–T7). Có thể thêm/xóa ca.</div>
+								{fields.map((field) => (
+									<Space key={field.key} align="baseline" style={{ display: 'flex', marginBottom: 8 }}>
+										<Form.Item
+											{...field}
+											label="Thứ"
+											name={[field.name, 'dayOfWeek']}
+											rules={[{ required: true, message: 'Chọn thứ' }]}
+										>
+											<Select
+												style={{ width: 110 }}
+												options={[
+													{ value: 1, label: 'T2' },
+													{ value: 2, label: 'T3' },
+													{ value: 3, label: 'T4' },
+													{ value: 4, label: 'T5' },
+													{ value: 5, label: 'T6' },
+													{ value: 6, label: 'T7' },
+												]}
+											/>
+										</Form.Item>
+										<Form.Item
+											{...field}
+											label="Bắt đầu"
+											name={[field.name, 'start']}
+											rules={[{ required: true, message: 'Chọn giờ' }]}
+										>
+											<TimePicker format="HH:mm" minuteStep={5} />
+										</Form.Item>
+										<Form.Item
+											{...field}
+											label="Kết thúc"
+											name={[field.name, 'end']}
+											rules={[{ required: true, message: 'Chọn giờ' }]}
+										>
+											<TimePicker format="HH:mm" minuteStep={5} />
+										</Form.Item>
+										<Button type="link" danger onClick={() => remove(field.name)}>
+											Xóa
+										</Button>
+									</Space>
+								))}
+								<Form.Item>
+									<Button type="dashed" onClick={() => add({ dayOfWeek: 1, start: moment('09:00', 'HH:mm'), end: moment('17:00', 'HH:mm') })} block>
+										Thêm ca làm
+									</Button>
+								</Form.Item>
+								<Form.Item shouldUpdate noStyle>
+									{() => {
+										const errs = form.getFieldError('workingHours');
+										if (!errs?.length) return null;
+										return (
+											<div style={{ marginTop: -4, marginBottom: 8, color: '#ff4d4f' }}>
+												{errs[0]}
+											</div>
+										);
+									}}
+								</Form.Item>
+							</>
+						)}
+					</Form.List>
 					<Form.Item
-						label="Lịch làm việc (nhập nhanh)"
-						name="workingHoursText"
-						tooltip='Format: "1 09:00-17:00; 5 09:00-12:00" (1=T2 ... 7=CN)'
+						name="workingHours"
+						rules={[
+							{
+								validator: async (_, val) => validateNoOverlapWorkingHours(val),
+							},
+						]}
+						hidden
 					>
-						<Input.TextArea rows={3} placeholder='Ví dụ: "1 09:00-17:00; 2 09:00-17:00; 5 09:00-12:00"' />
+						<Input />
 					</Form.Item>
 				</Form>
 			</Modal>
