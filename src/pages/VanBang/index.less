@@ -1,0 +1,79 @@
+@import '~antd/es/style/themes/default.less';
+
+.vanBang {
+	max-width: 1200px;
+	margin: 0 auto;
+
+	&-hero {
+		padding: 20px 24px;
+		margin-bottom: 0;
+		border-radius: 8px 8px 0 0;
+		background: linear-gradient(135deg, fade(@primary-color, 10%) 0%, rgba(0, 0, 0, 0.02) 55%);
+		border: 1px solid #f0f0f0;
+		border-bottom: none;
+	}
+
+	&-heroTitle {
+		margin: 0 0 6px !important;
+		font-weight: 600;
+	}
+
+	&-heroDesc {
+		margin: 0;
+		color: @text-color-secondary;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	&-card {
+		border-radius: 0 0 8px 8px;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+	}
+
+	&-tabPane {
+		padding: 20px 8px 8px;
+		min-height: 280px;
+	}
+
+	&-toolbar {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-bottom: 16px;
+	}
+
+	&-sectionTitle {
+		margin: 0 0 4px !important;
+		font-weight: 600;
+	}
+
+	&-hint {
+		margin: 0;
+		color: @text-color-secondary;
+		font-size: 13px;
+	}
+
+	:global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab) {
+		padding: 10px 16px;
+		transition: background 0.2s;
+	}
+
+	:global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active) {
+		background: #fafafa;
+	}
+
+	:global(.ant-tabs-tab .anticon) {
+		margin-right: 6px;
+	}
+
+	:global(.ant-table-thead > tr > th) {
+		font-weight: 600;
+		background: #fafafa !important;
+	}
+
+	:global(.ant-card-head-title) {
+		font-weight: 600;
+	}
+}

@@ -22,27 +22,35 @@ import {
 	type GraduationDecision,
 } from '@/services/vanBang';
 import {
+	BookOutlined,
+	FileDoneOutlined,
+	FormOutlined,
+	IdcardOutlined,
+	SearchOutlined,
+} from '@ant-design/icons';
+import {
 	Button,
-	Form,
-	InputNumber,
-	Modal,
-	Popconfirm,
-	Space,
-	Table,
-	Typography,
-	message,
 	Card,
 	Col,
 	DatePicker,
 	Descriptions,
+	Form,
 	Input,
+	InputNumber,
+	Modal,
+	Popconfirm,
 	Row,
 	Select,
+	Space,
 	Switch,
+	Table,
 	Tabs,
+	Typography,
+	message,
 } from 'antd';
 import moment from 'moment';
 import { useMemo, useState } from 'react';
+import './index.less';
 
 const SoVanBangTab = () => {
 	const [items, setItems] = useState<RegistryBook[]>(() => listRegistryBooks());
@@ -52,15 +60,18 @@ const SoVanBangTab = () => {
 	const reload = () => setItems(listRegistryBooks());
 
 	return (
-		<>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Typography.Title level={4} style={{ margin: 0 }}>
-					Sổ văn bằng
-				</Typography.Title>
+		<div className='vanBang-tabPane'>
+			<div className='vanBang-toolbar'>
+				<div>
+					<Typography.Title level={4} className='vanBang-sectionTitle'>
+						Sổ văn bằng
+					</Typography.Title>
+					<p className='vanBang-hint'>Mỗi năm một sổ — số vào sổ tăng trong phạm vi sổ.</p>
+				</div>
 				<Button type='primary' onClick={() => setOpen(true)}>
 					Thêm sổ
 				</Button>
-			</Space>
+			</div>
 			<Table<RegistryBook>
 				rowKey='id'
 				dataSource={items}
@@ -124,7 +135,7 @@ const SoVanBangTab = () => {
 					</Form.Item>
 				</Form>
 			</Modal>
-		</>
+		</div>
 	);
 };
 
@@ -137,15 +148,18 @@ const QuyetDinhTab = () => {
 	const reload = () => setItems(listGraduationDecisions());
 
 	return (
-		<>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Typography.Title level={4} style={{ margin: 0 }}>
-					Quyết định tốt nghiệp
-				</Typography.Title>
+		<div className='vanBang-tabPane'>
+			<div className='vanBang-toolbar'>
+				<div>
+					<Typography.Title level={4} className='vanBang-sectionTitle'>
+						Quyết định tốt nghiệp
+					</Typography.Title>
+					<p className='vanBang-hint'>Gắn với sổ văn bằng — có thể nhiều quyết định trong một năm.</p>
+				</div>
 				<Button type='primary' onClick={() => setOpen(true)}>
 					Thêm quyết định
 				</Button>
-			</Space>
+			</div>
 			<Table<GraduationDecision>
 				rowKey='id'
 				dataSource={items}
@@ -227,7 +241,7 @@ const QuyetDinhTab = () => {
 					</Form.Item>
 				</Form>
 			</Modal>
-		</>
+		</div>
 	);
 };
 
@@ -240,15 +254,18 @@ const PhuLucTab = () => {
 	const reload = () => setItems(listFieldDefinitions());
 
 	return (
-		<>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Typography.Title level={4} style={{ margin: 0 }}>
-					Cấu hình phụ lục
-				</Typography.Title>
+		<div className='vanBang-tabPane'>
+			<div className='vanBang-toolbar'>
+				<div>
+					<Typography.Title level={4} className='vanBang-sectionTitle'>
+						Cấu hình phụ lục
+					</Typography.Title>
+					<p className='vanBang-hint'>Định nghĩa trường động (chuỗi / số / ngày) dùng cho văn bằng.</p>
+				</div>
 				<Button type='primary' onClick={() => setOpenAdd(true)}>
 					Thêm trường
 				</Button>
-			</Space>
+			</div>
 			<Table<DiplomaFieldDefinition>
 				rowKey='id'
 				dataSource={items}
@@ -372,7 +389,7 @@ const PhuLucTab = () => {
 					</Form.Item>
 				</Form>
 			</Modal>
-		</>
+		</div>
 	);
 };
 
@@ -398,15 +415,18 @@ const VanBangInfoTab = () => {
 	};
 
 	return (
-		<>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Typography.Title level={4} style={{ margin: 0 }}>
-					Thông tin văn bằng
-				</Typography.Title>
+		<div className='vanBang-tabPane'>
+			<div className='vanBang-toolbar'>
+				<div>
+					<Typography.Title level={4} className='vanBang-sectionTitle'>
+						Thông tin văn bằng
+					</Typography.Title>
+					<p className='vanBang-hint'>Số vào sổ được cấp tự động theo sổ — điền trường phụ lục theo cấu hình.</p>
+				</div>
 				<Button type='primary' onClick={() => setOpen(true)}>
 					Thêm văn bằng
 				</Button>
-			</Space>
+			</div>
 			<Table<Diploma>
 				rowKey='id'
 				dataSource={items}
@@ -516,7 +536,7 @@ const VanBangInfoTab = () => {
 					</Row>
 				</Form>
 			</Modal>
-		</>
+		</div>
 	);
 };
 
@@ -527,9 +547,15 @@ const TraCuuTab = () => {
 	const decisionMap = useMemo(() => Object.fromEntries(listGraduationDecisions().map((d) => [d.id, d])), []);
 
 	return (
-		<>
-			<Typography.Title level={4}>Tra cứu văn bằng</Typography.Title>
-			<Typography.Paragraph type='secondary'>Nhập ít nhất 2 tham số để tra cứu.</Typography.Paragraph>
+		<div className='vanBang-tabPane'>
+			<div className='vanBang-toolbar'>
+				<div>
+					<Typography.Title level={4} className='vanBang-sectionTitle'>
+						Tra cứu văn bằng
+					</Typography.Title>
+					<p className='vanBang-hint'>Nhập ít nhất hai tham số (số hiệu, số vào sổ, MSV, họ tên hoặc ngày sinh).</p>
+				</div>
+			</div>
 			<Form form={form} layout='vertical'>
 				<Row gutter={12}>
 					<Col span={12}>
@@ -611,47 +637,86 @@ const TraCuuTab = () => {
 					</Card>
 				))}
 			</div>
-		</>
+		</div>
 	);
 };
 
 const VanBangPage = () => {
 	return (
-		<Card>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Typography.Title level={3} style={{ margin: 0 }}>
+		<div className='vanBang'>
+			<div className='vanBang-hero'>
+				<Typography.Title level={3} className='vanBang-heroTitle'>
 					Quản lý văn bằng
 				</Typography.Title>
-				<Popconfirm
-					title='Reset dữ liệu về db.json?'
-					okText='Reset'
-					cancelText='Hủy'
-					onConfirm={() => {
-						resetFakeDb();
-						window.location.reload();
-					}}
-				>
-					<Button>Reset dữ liệu</Button>
-				</Popconfirm>
-			</Space>
-			<Tabs defaultActiveKey='1' destroyInactiveTabPane>
-				<Tabs.TabPane tab='Sổ văn bằng' key='1'>
-					<SoVanBangTab />
-				</Tabs.TabPane>
-				<Tabs.TabPane tab='Quyết định TN' key='2'>
-					<QuyetDinhTab />
-				</Tabs.TabPane>
-				<Tabs.TabPane tab='Biểu mẫu phụ lục' key='3'>
-					<PhuLucTab />
-				</Tabs.TabPane>
-				<Tabs.TabPane tab='Thông tin văn bằng' key='4'>
-					<VanBangInfoTab />
-				</Tabs.TabPane>
-				<Tabs.TabPane tab='Tra cứu' key='5'>
-					<TraCuuTab />
-				</Tabs.TabPane>
-			</Tabs>
-		</Card>
+			</div>
+			<Card className='vanBang-card' bordered={false}>
+				<div className='vanBang-toolbar' style={{ justifyContent: 'flex-end' }}>
+					<Popconfirm
+						title='Reset dữ liệu về db.json?'
+						okText='Reset'
+						cancelText='Hủy'
+						onConfirm={() => {
+							resetFakeDb();
+							window.location.reload();
+						}}
+					>
+						<Button>Reset dữ liệu</Button>
+					</Popconfirm>
+				</div>
+				<Tabs defaultActiveKey='1' destroyInactiveTabPane type='card'>
+					<Tabs.TabPane
+						tab={
+							<span>
+								<BookOutlined /> Sổ văn bằng
+							</span>
+						}
+						key='1'
+					>
+						<SoVanBangTab />
+					</Tabs.TabPane>
+					<Tabs.TabPane
+						tab={
+							<span>
+								<FileDoneOutlined /> Quyết định TN
+							</span>
+						}
+						key='2'
+					>
+						<QuyetDinhTab />
+					</Tabs.TabPane>
+					<Tabs.TabPane
+						tab={
+							<span>
+								<FormOutlined /> Biểu mẫu phụ lục
+							</span>
+						}
+						key='3'
+					>
+						<PhuLucTab />
+					</Tabs.TabPane>
+					<Tabs.TabPane
+						tab={
+							<span>
+								<IdcardOutlined /> Thông tin văn bằng
+							</span>
+						}
+						key='4'
+					>
+						<VanBangInfoTab />
+					</Tabs.TabPane>
+					<Tabs.TabPane
+						tab={
+							<span>
+								<SearchOutlined /> Tra cứu
+							</span>
+						}
+						key='5'
+					>
+						<TraCuuTab />
+					</Tabs.TabPane>
+				</Tabs>
+			</Card>
+		</div>
 	);
 };
 
