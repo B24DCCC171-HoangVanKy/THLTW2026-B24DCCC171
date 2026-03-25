@@ -1,6 +1,65 @@
-﻿{
+{
 	"registryBooks": [
 		{ "id": "rb-2024", "year": 2024, "lastEntryNumber": 2 },
 		{ "id": "rb-2025", "year": 2025, "lastEntryNumber": 0 }
-	]
+	],
+	"graduationDecisions": [
+		{
+			"id": "gd-2024-dot1",
+			"registryBookId": "rb-2024",
+			"decisionNumber": "QĐ-123/QĐ-HV",
+			"issueDate": "2024-08-15",
+			"summary": "Công nhận tốt nghiệp đợt 1 năm 2024",
+			"searchCount": 0
+		},
+		{
+			"id": "gd-2024-dot2",
+			"registryBookId": "rb-2024",
+			"decisionNumber": "QĐ-456/QĐ-HV",
+			"issueDate": "2024-12-01",
+			"summary": "Công nhận tốt nghiệp đợt 2 năm 2024",
+			"searchCount": 0
+		}
+	],
+	"fieldDefinitions": [
+		{ "id": "fd-1", "key": "dan_toc", "label": "Dân tộc", "fieldType": "STRING", "sortOrder": 1, "isActive": true },
+		{ "id": "fd-2", "key": "noi_sinh", "label": "Nơi sinh", "fieldType": "STRING", "sortOrder": 2, "isActive": true },
+		{ "id": "fd-3", "key": "diem_tb", "label": "Điểm trung bình", "fieldType": "NUMBER", "sortOrder": 3, "isActive": true },
+		{ "id": "fd-4", "key": "ngay_nhap_hoc", "label": "Ngày nhập học", "fieldType": "DATE", "sortOrder": 4, "isActive": true }
+	],
+	"diplomas": [
+		{
+			"id": "dip-1",
+			"graduationDecisionId": "gd-2024-dot1",
+			"registryBookId": "rb-2024",
+			"entryNumber": 1,
+			"diplomaSerialNumber": "VB-2024-00001",
+			"studentId": "B20DCCN001",
+			"fullName": "Nguyễn Văn A",
+			"birthDate": "2002-05-10",
+			"dynamicValues": {
+				"dan_toc": "Kinh",
+				"noi_sinh": "Hà Nội",
+				"diem_tb": 8.5,
+				"ngay_nhap_hoc": "2020-09-01"
+			}
+		},
+		{
+			"id": "dip-2",
+			"graduationDecisionId": "gd-2024-dot1",
+			"registryBookId": "rb-2024",
+			"entryNumber": 2,
+			"diplomaSerialNumber": "VB-2024-00002",
+			"studentId": "B20DCCN002",
+			"fullName": "Trần Thị B",
+			"birthDate": "2002-11-20",
+			"dynamicValues": {
+				"dan_toc": "Tày",
+				"noi_sinh": "Cao Bằng",
+				"diem_tb": 7.75,
+				"ngay_nhap_hoc": "2020-09-01"
+			}
+		}
+	],
+	"lookupLogs": []
 }

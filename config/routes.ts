@@ -41,7 +41,7 @@ export default [
 	},
 	{
 		path: '/van-bang',
-		name: 'SoVanBang',
+		name: 'VanBang',
 		icon: 'BookOutlined',
 		component: './VanBang',
 	},
