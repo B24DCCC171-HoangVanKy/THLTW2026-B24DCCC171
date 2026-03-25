@@ -1,3 +1,8 @@
+declare module '*.json' {
+	const value: unknown;
+	export default value;
+}
+
 declare module '*.css';
 declare module '*.less';
 declare module '*.scss';
