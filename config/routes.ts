@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -16,8 +16,6 @@
 		],
 	},
 
-	///////////////////////////////////
-	// DEFAULT MENU
 	{
 		path: '/dashboard',
 		name: 'Dashboard',
@@ -42,20 +40,42 @@
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
 	},
-
-	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
+	{
+		name: 'Kế hoạch du lịch',
+		path: '/ke-hoach-du-lich',
+		icon: 'CompassOutlined',
+		locale: false,
+		routes: [
+			{
+				name: 'Khám phá điểm đến',
+				path: 'kham-pha-diem-den',
+				component: './KeHoachDuLich/KhamPhaDiemDen',
+				icon: 'EnvironmentOutlined',
+				locale: false,
+			},
+			{
+				name: 'Tạo lịch trình',
+				path: 'tao-lich-trinh',
+				component: './KeHoachDuLich/TaoLichTrinh',
+				icon: 'CalendarOutlined',
+				locale: false,
+			},
+			{
+				name: 'Quản lý ngân sách',
+				path: 'quan-ly-ngan-sach',
+				component: './KeHoachDuLich/QuanLyNganSach',
+				icon: 'PieChartOutlined',
+				locale: false,
+			},
+			{
+				name: 'Admin',
+				path: 'admin',
+				component: './KeHoachDuLich/Admin',
+				icon: 'SettingOutlined',
+				locale: false,
+			},
+		],
+	},
 
 	{
 		path: '/notification',
