@@ -43,6 +43,14 @@
 		component: './TodoList',
 	},
 
+	{
+		path: '/quan-ly-phong-hoc',
+		name: 'Quản lý phòng học',
+		icon: 'BankOutlined',
+		component: './QuanLyPhongHoc',
+		locale: false,
+	},
+
 	// DANH MUC HE THONG
 	// {
 	// 	name: 'DanhMuc',
