@@ -1,7 +1,10 @@
 import {
+	capNhatPhongHoc,
 	datLaiDuLieuPhongHocMacDinh,
 	layDanhSachNguoiPhuTrach,
 	layDanhSachPhongHoc,
+	taoPhongHoc,
+	xoaPhongHoc,
 } from '@/services/PhongHoc';
 import {
 	type INguoiPhuTrach,
@@ -86,6 +89,57 @@ export default () => {
 		}
 	};
 
+	const taoMoiPhongHoc = async (payload: {
+		maPhong: string;
+		tenPhong: string;
+		soChoNgoi: number;
+		loaiPhong: TLoaiPhong;
+		nguoiPhuTrachId: string;
+	}) => {
+		setLoading(true);
+		try {
+			await taoPhongHoc(payload);
+			const data = await layDanhSachPhongHoc();
+			setDanhSachGoc(data);
+			setDanhSachHienThi(locVaSapXep(data, tuKhoa, loaiPhongDangLoc, nguoiPhuTrachDangLoc, sapXepSoChoNgoi));
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const chinhSuaPhongHoc = async (
+		id: string,
+		payload: Partial<{
+			maPhong: string;
+			tenPhong: string;
+			soChoNgoi: number;
+			loaiPhong: TLoaiPhong;
+			nguoiPhuTrachId: string;
+		}>,
+	) => {
+		setLoading(true);
+		try {
+			await capNhatPhongHoc(id, payload);
+			const data = await layDanhSachPhongHoc();
+			setDanhSachGoc(data);
+			setDanhSachHienThi(locVaSapXep(data, tuKhoa, loaiPhongDangLoc, nguoiPhuTrachDangLoc, sapXepSoChoNgoi));
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const xoaPhongHocTheoId = async (id: string) => {
+		setLoading(true);
+		try {
+			await xoaPhongHoc(id);
+			const data = await layDanhSachPhongHoc();
+			setDanhSachGoc(data);
+			setDanhSachHienThi(locVaSapXep(data, tuKhoa, loaiPhongDangLoc, nguoiPhuTrachDangLoc, sapXepSoChoNgoi));
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const capNhatTuKhoa = (giaTri: string) => {
 		setTuKhoa(giaTri);
 		apDungLoc({ tuKhoa: giaTri });
@@ -108,6 +162,7 @@ export default () => {
 
 	return {
 		loading,
+		danhSachGoc,
 		danhSachHienThi,
 		danhSachNguoiPhuTrach,
 		tuKhoa,
@@ -120,6 +175,9 @@ export default () => {
 		capNhatLoaiPhong,
 		capNhatNguoiPhuTrach,
 		capNhatSapXepSoChoNgoi,
+		taoMoiPhongHoc,
+		chinhSuaPhongHoc,
+		xoaPhongHocTheoId,
 	};
 };
 
