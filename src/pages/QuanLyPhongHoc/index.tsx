@@ -1,5 +1,5 @@
-import { datLaiDuLieuPhongHocMacDinh, layDanhSachPhongHoc } from '@/services/PhongHoc';
 import { type IPhongHoc } from '@/services/PhongHoc/typing';
+import { ReloadOutlined } from '@ant-design/icons';
 import {
 	Button,
 	Card,
@@ -7,11 +7,11 @@ import {
 	Table,
 	Tag,
 	Typography,
+	Input,
+	Select,
 } from 'antd';
-import {
-	ReloadOutlined,
-} from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useModel } from 'umi';
 
 const { Title } = Typography;
 
@@ -22,28 +22,21 @@ const nhanLoaiPhong: Record<IPhongHoc['loaiPhong'], { text: string; color: strin
 };
 
 const QuanLyPhongHocPage = () => {
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState<IPhongHoc[]>([]);
-
-	const taiDuLieu = async () => {
-		setLoading(true);
-		try {
-			const ds = await layDanhSachPhongHoc();
-			setData(ds);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const datLai = async () => {
-		setLoading(true);
-		try {
-			const ds = await datLaiDuLieuPhongHocMacDinh();
-			setData(ds);
-		} finally {
-			setLoading(false);
-		}
-	};
+	const {
+		loading,
+		danhSachHienThi,
+		danhSachNguoiPhuTrach,
+		tuKhoa,
+		loaiPhongDangLoc,
+		nguoiPhuTrachDangLoc,
+		sapXepSoChoNgoi,
+		taiDuLieu,
+		datLaiDuLieu,
+		capNhatTuKhoa,
+		capNhatLoaiPhong,
+		capNhatNguoiPhuTrach,
+		capNhatSapXepSoChoNgoi,
+	} = useModel('phonghoc');
 
 	useEffect(() => {
 		taiDuLieu();
@@ -64,25 +57,77 @@ const QuanLyPhongHocPage = () => {
 						<Button icon={<ReloadOutlined />} loading={loading} onClick={taiDuLieu}>
 							Tải lại
 						</Button>
-						<Button danger loading={loading} onClick={datLai}>
+						<Button danger loading={loading} onClick={datLaiDuLieu}>
 							Reset dữ liệu mẫu
 						</Button>
 					</Space>
 				}
 			>
+				<Space wrap size={12} style={{ marginBottom: 16 }}>
+					<Input
+						allowClear
+						placeholder='Tìm theo mã phòng hoặc tên phòng'
+						value={tuKhoa}
+						onChange={(e) => capNhatTuKhoa(e.target.value)}
+						style={{ width: 280 }}
+					/>
+					<Select
+						allowClear
+						placeholder='Lọc loại phòng'
+						value={loaiPhongDangLoc}
+						onChange={capNhatLoaiPhong}
+						style={{ width: 180 }}
+						options={[
+							{ value: 'LyThuyet', label: 'Lý thuyết' },
+							{ value: 'ThucHanh', label: 'Thực hành' },
+							{ value: 'HoiTruong', label: 'Hội trường' },
+						]}
+					/>
+					<Select
+						allowClear
+						placeholder='Lọc người phụ trách'
+						value={nguoiPhuTrachDangLoc}
+						onChange={capNhatNguoiPhuTrach}
+						style={{ width: 220 }}
+						options={danhSachNguoiPhuTrach.map((item) => ({
+							value: item.id,
+							label: item.ten,
+						}))}
+					/>
+					<Select
+						allowClear
+						placeholder='Sắp xếp số chỗ ngồi'
+						value={sapXepSoChoNgoi}
+						onChange={capNhatSapXepSoChoNgoi}
+						style={{ width: 200 }}
+						options={[
+							{ value: 'tang', label: 'Số chỗ ngồi: tăng dần' },
+							{ value: 'giam', label: 'Số chỗ ngồi: giảm dần' },
+						]}
+					/>
+				</Space>
+
 				<Table<IPhongHoc>
 					rowKey='id'
 					loading={loading}
-					dataSource={data}
+					dataSource={danhSachHienThi}
 					pagination={{ pageSize: 8, showSizeChanger: true }}
 					columns={[
-						{ title: 'Mã phòng', dataIndex: 'maPhong', width: 110 },
-						{ title: 'Tên phòng', dataIndex: 'tenPhong', ellipsis: true },
+						{
+							title: 'Mã phòng',
+							dataIndex: 'maPhong',
+							width: 110,
+						},
+						{
+							title: 'Tên phòng',
+							dataIndex: 'tenPhong',
+							ellipsis: true,
+						},
 						{
 							title: 'Số chỗ',
 							dataIndex: 'soChoNgoi',
 							width: 90,
-							sorter: (a, b) => a.soChoNgoi - b.soChoNgoi,
+							align: 'center',
 						},
 						{
 							title: 'Loại phòng',
@@ -93,7 +138,12 @@ const QuanLyPhongHocPage = () => {
 								return <Tag color={meta.color}>{meta.text}</Tag>;
 							},
 						},
-						{ title: 'Người phụ trách', dataIndex: 'nguoiPhuTrachTen', width: 170, ellipsis: true },
+						{
+							title: 'Người phụ trách',
+							dataIndex: 'nguoiPhuTrachTen',
+							width: 170,
+							ellipsis: true,
+						},
 					]}
 				/>
 			</Card>
