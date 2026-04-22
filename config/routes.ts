@@ -43,6 +43,14 @@
 		component: './TodoList',
 	},
 
+	// BLOG MODULE
+	{
+		path: '/blog',
+		name: 'Blog',
+		icon: 'ReadOutlined',
+		component: './Blog',
+	},
+
 	// DANH MUC HE THONG
 	// {
 	// 	name: 'DanhMuc',
