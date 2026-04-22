@@ -40,7 +40,7 @@ export default () => {
 		}
 	}, []);
 
-	const createPost = async (payload: Partial<Blog.IPost>) => {
+	const createPost = useCallback(async (payload: Partial<Blog.IPost>) => {
 		setFormSubmiting(true);
 		try {
 			const res = await blogService.createPost(payload);
@@ -49,9 +49,9 @@ export default () => {
 		} finally {
 			setFormSubmiting(false);
 		}
-	};
+	}, [fetchPosts]);
 
-	const updatePost = async (id: string, payload: Partial<Blog.IPost>) => {
+	const updatePost = useCallback(async (id: string, payload: Partial<Blog.IPost>) => {
 		setFormSubmiting(true);
 		try {
 			const res = await blogService.updatePost(id, payload);
@@ -60,16 +60,16 @@ export default () => {
 		} finally {
 			setFormSubmiting(false);
 		}
-	};
+	}, [fetchPosts]);
 
-	const deletePost = async (id: string) => {
+	const deletePost = useCallback(async (id: string) => {
 		await blogService.deletePost(id);
 		await fetchPosts();
-	};
+	}, [fetchPosts]);
 
-	const incrementView = async (id: string) => {
+	const incrementView = useCallback(async (id: string) => {
 		return blogService.incrementViewCount(id);
-	};
+	}, []);
 
 	const resetFilters = () => {
 		setKeyword('');

@@ -1,6 +1,6 @@
 import { Card, Col, Empty, Pagination, Row, Spin } from 'antd';
 import { useEffect, useMemo } from 'react';
-import { useModel } from 'umi';
+import { Link, useModel } from 'umi';
 import PostCard from './components/PostCard';
 import SearchBox from './components/SearchBox';
 import TagFilter from './components/TagFilter';
@@ -51,6 +51,9 @@ const BlogHomePage: React.FC = () => {
 			<div className='blog-home__toolbar'>
 				<SearchBox value={keyword} onChange={setKeyword} />
 				<TagFilter tags={tags} activeTag={activeTag} onChange={setActiveTag} />
+				<div className='blog-home__about-link'>
+					<Link to='/blog/about'>Giới thiệu tác giả</Link>
+				</div>
 			</div>
 
 			<Spin spinning={loading}>

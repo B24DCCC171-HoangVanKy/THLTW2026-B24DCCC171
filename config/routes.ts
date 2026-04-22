@@ -45,6 +45,16 @@
 
 	// BLOG MODULE
 	{
+		path: '/blog/post/:slug',
+		component: './Blog/PostDetail',
+		hideInMenu: true,
+	},
+	{
+		path: '/blog/about',
+		component: './Blog/About',
+		hideInMenu: true,
+	},
+	{
 		path: '/blog',
 		name: 'Blog',
 		icon: 'ReadOutlined',

@@ -21,3 +21,16 @@ export const phanTrang = <T>(danhSach: T[], trang: number, kichThuoc: number): T
 	const batDau = (trang - 1) * kichThuoc;
 	return danhSach.slice(batDau, batDau + kichThuoc);
 };
+
+export const layBaiLienQuan = (
+	dsBaiViet: Blog.IPost[],
+	baiHienTai?: Blog.IPost,
+	gioiHan = 3,
+): Blog.IPost[] => {
+	if (!baiHienTai) return [];
+	return dsBaiViet
+		.filter((bai) => bai.status === 'published')
+		.filter((bai) => bai.id !== baiHienTai.id)
+		.filter((bai) => bai.tags.some((tag) => baiHienTai.tags.includes(tag)))
+		.slice(0, gioiHan);
+};
