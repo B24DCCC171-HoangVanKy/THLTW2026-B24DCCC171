@@ -45,20 +45,40 @@
 
 	// BLOG MODULE
 	{
-		path: '/blog/post/:slug',
-		component: './Blog/PostDetail',
-		hideInMenu: true,
-	},
-	{
-		path: '/blog/about',
-		component: './Blog/About',
-		hideInMenu: true,
-	},
-	{
 		path: '/blog',
 		name: 'Blog',
 		icon: 'ReadOutlined',
-		component: './Blog',
+		routes: [
+			{
+				path: '/blog',
+				name: 'BlogHome',
+				icon: 'UnorderedListOutlined',
+				exact: true,
+				component: './Blog',
+			},
+			{
+				path: '/blog/manage/posts',
+				name: 'BlogManagePosts',
+				icon: 'FileTextOutlined',
+				component: './Blog/ManagePosts',
+			},
+			{
+				path: '/blog/manage/tags',
+				name: 'BlogManageTags',
+				icon: 'TagsOutlined',
+				component: './Blog/ManageTags',
+			},
+			{
+				path: '/blog/about',
+				component: './Blog/About',
+				hideInMenu: true,
+			},
+			{
+				path: '/blog/post/:slug',
+				component: './Blog/PostDetail',
+				hideInMenu: true,
+			},
+		],
 	},
 
 	// DANH MUC HE THONG

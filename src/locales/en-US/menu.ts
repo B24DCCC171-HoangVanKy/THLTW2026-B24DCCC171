@@ -8,4 +8,9 @@ export default {
   'menu.DanhMuc': 'Danh mục',
   'menu.DanhMuc.ChucVu': 'Chức vụ',
   'menu.DanhMuc.LoaiPhongBan': 'Loại phòng ban',
+
+  'menu.Blog': 'Blog',
+  'menu.Blog.BlogHome': 'Danh sách bài viết',
+  'menu.Blog.BlogManagePosts': 'Quản lý bài viết',
+  'menu.Blog.BlogManageTags': 'Quản lý thẻ',
 };
