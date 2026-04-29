@@ -42,6 +42,36 @@
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
 	},
+	{
+		path: '/fitness/dashboard',
+		name: 'FitnessDashboard',
+		icon: 'DashboardOutlined',
+		component: './Fitness/Dashboard',
+	},
+	{
+		path: '/fitness/workout-log',
+		name: 'WorkoutLog',
+		icon: 'ScheduleOutlined',
+		component: './Fitness/WorkoutLog',
+	},
+	{
+		path: '/fitness/health-metrics',
+		name: 'HealthMetrics',
+		icon: 'HeartOutlined',
+		component: './Fitness/HealthMetrics',
+	},
+	{
+		path: '/fitness/goals',
+		name: 'FitnessGoals',
+		icon: 'FlagOutlined',
+		component: './Fitness/Goals',
+	},
+	{
+		path: '/fitness/exercise-library',
+		name: 'ExerciseLibrary',
+		icon: 'AppstoreOutlined',
+		component: './Fitness/ExerciseLibrary',
+	},
 
 	// DANH MUC HE THONG
 	// {
