@@ -42,6 +42,12 @@
 		icon: 'OrderedListOutlined',
 		component: './TodoList',
 	},
+	{
+		path: '/quan-ly-cong-viec',
+		name: 'QuanLyCongViec',
+		icon: 'UnorderedListOutlined',
+		component: './QuanLyCongViec',
+	},
 
 	// DANH MUC HE THONG
 	// {
