@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+	doiTrangThaiTask,
 	lamMoiDuLieuGoc,
 	layDanhSachTask,
 	suaTask,
@@ -59,6 +60,11 @@ export default () => {
 		setDanhSachTask(danhSachMoi);
 	};
 
+	const capNhatTrangThaiTask = (taskId: string, trangThai: TrangThaiTask): void => {
+		const danhSachMoi = doiTrangThaiTask(taskId, trangThai);
+		setDanhSachTask(danhSachMoi);
+	};
+
 	const taiLaiDuLieuGoc = (): void => {
 		const danhSachMoi = lamMoiDuLieuGoc();
 		setDanhSachTask(danhSachMoi);
@@ -74,6 +80,7 @@ export default () => {
 		dongFormTask,
 		luuTask,
 		xoaTaskTheoId,
+		capNhatTrangThaiTask,
 		taiLaiDuLieuGoc,
 	};
 };

@@ -46,7 +46,27 @@
 		path: '/quan-ly-cong-viec',
 		name: 'QuanLyCongViec',
 		icon: 'UnorderedListOutlined',
-		component: './QuanLyCongViec',
+		routes: [
+			{
+				path: '/quan-ly-cong-viec',
+				redirect: '/quan-ly-cong-viec/dashboard',
+			},
+			{
+				path: '/quan-ly-cong-viec/dashboard',
+				name: 'DashboardCongViec',
+				component: './QuanLyCongViec/dashboard',
+			},
+			{
+				path: '/quan-ly-cong-viec/kanban',
+				name: 'KanbanCongViec',
+				component: './QuanLyCongViec/kanban',
+			},
+			{
+				path: '/quan-ly-cong-viec/danh-sach',
+				name: 'DanhSachCongViec',
+				component: './QuanLyCongViec/danhsach',
+			},
+		],
 	},
 
 	// DANH MUC HE THONG

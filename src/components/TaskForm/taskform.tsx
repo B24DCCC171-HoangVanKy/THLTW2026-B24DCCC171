@@ -1,5 +1,6 @@
 import { DatePicker, Form, Input, Modal, Select } from 'antd';
 import moment from 'moment';
+import { useEffect } from 'react';
 import { type FormTaskData } from '@/models/congviec';
 import { type TaskItem } from '@/services/TaskLocal/tasklocalservice';
 
@@ -24,6 +25,18 @@ interface FormValue {
 const TaskForm: React.FC<TaskFormProps> = ({ visible, taskDangSua, onDong, onLuu }) => {
 	const [form] = Form.useForm<FormValue>();
 
+	useEffect(() => {
+		if (!visible) return;
+		form.setFieldsValue({
+			tenTask: taskDangSua?.tenTask || '',
+			moTa: taskDangSua?.moTa || '',
+			deadline: taskDangSua?.deadline ? moment(taskDangSua.deadline) : undefined,
+			doUuTien: taskDangSua?.doUuTien || 'Trung bình',
+			trangThai: taskDangSua?.trangThai || 'Cần làm',
+			tags: taskDangSua?.tags || [],
+		});
+	}, [visible, taskDangSua, form]);
+
 	return (
 		<Modal
 			destroyOnClose
@@ -39,14 +52,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ visible, taskDangSua, onDong, onLuu
 			<Form<FormValue>
 				layout='vertical'
 				form={form}
-				initialValues={{
-					tenTask: taskDangSua?.tenTask || '',
-					moTa: taskDangSua?.moTa || '',
-					deadline: taskDangSua?.deadline ? moment(taskDangSua.deadline) : undefined,
-					doUuTien: taskDangSua?.doUuTien || 'Trung bình',
-					trangThai: taskDangSua?.trangThai || 'Cần làm',
-					tags: taskDangSua?.tags || [],
-				}}
 				onFinish={(values) => {
 					onLuu({
 						tenTask: values.tenTask,
