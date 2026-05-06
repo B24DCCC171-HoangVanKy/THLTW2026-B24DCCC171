@@ -20,6 +20,12 @@ const mapCotSangTrangThai: Record<string, TrangThaiTask> = {
 	'dang-lam': 'Đang làm',
 	'hoan-thanh': 'Hoàn thành',
 };
+const mauTagCoDinh = 'geekblue';
+const mauDoUuTien: Record<string, string> = {
+	Cao: 'red',
+	'Trung bình': 'blue',
+	Thấp: 'green',
+};
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({ danhSachTask, onDoiTrangThai }) => {
 	const onDragEnd = (result: DropResult): void => {
@@ -32,53 +38,47 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ danhSachTask, onDoiTrangThai 
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<Row gutter={16} align='top'>
+			<Row gutter={[16, 16]} align='top'>
 				{cotKanban.map((cot) => {
 					const taskTheoCot = danhSachTask.filter((task) => task.trangThai === cot.tieuDe);
 					return (
-						<Col span={8} key={cot.id}>
-							<Card title={cot.tieuDe} bordered>
+						<Col xs={24} md={8} key={cot.id}>
+							<Card title={`${cot.tieuDe} (${taskTheoCot.length})`} bordered className={`kanban-cot kanban-cot-${cot.id}`}>
 								<Droppable droppableId={cot.id}>
 									{(provided, snapshot) => (
 										<div
+											className={`kanban-dropzone ${snapshot.isDraggingOver ? 'is-dragging-over' : ''}`}
 											ref={provided.innerRef}
 											{...provided.droppableProps}
-											style={{
-												minHeight: 420,
-												padding: 8,
-												background: snapshot.isDraggingOver ? '#f5f5f5' : 'transparent',
-											}}
 										>
 											{taskTheoCot.map((task, index) => (
 												<Draggable draggableId={task.id} index={index} key={task.id}>
 													{(draggableProvided, draggableSnapshot) => (
 														<div
+															className='kanban-draggable-wrap'
 															ref={draggableProvided.innerRef}
 															{...draggableProvided.draggableProps}
 															{...draggableProvided.dragHandleProps}
 															style={{
-																marginBottom: 12,
 																...draggableProvided.draggableProps.style,
 															}}
 														>
 															<Card
 																size='small'
-																style={{
-																	boxShadow: draggableSnapshot.isDragging
-																		? '0 2px 10px rgba(0,0,0,0.12)'
-																		: undefined,
-																}}
+																className={`kanban-task-card ${draggableSnapshot.isDragging ? 'is-dragging' : ''}`}
 															>
-																<Title level={5} style={{ marginBottom: 8 }}>
+																<Title level={5} className='kanban-task-title'>
 																	{task.tenTask}
 																</Title>
-																<Text type='secondary'>
+																<Text>
 																	Deadline: {new Date(task.deadline).toLocaleString()}
 																</Text>
-																<div style={{ marginTop: 8 }}>
-																	<Tag>{task.doUuTien}</Tag>
+																<div className='kanban-task-tags'>
+																	<Tag color={mauDoUuTien[task.doUuTien]}>{task.doUuTien}</Tag>
 																	{task.tags.map((tag) => (
-																		<Tag key={`${task.id}-${tag}`}>{tag}</Tag>
+																		<Tag color={mauTagCoDinh} key={`${task.id}-${tag}`}>
+																			{tag}
+																		</Tag>
 																	))}
 																</div>
 															</Card>

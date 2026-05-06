@@ -3,8 +3,21 @@ import { Button, Card, Col, Empty, Popconfirm, Row, Space, Tag, Typography } fro
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import TaskForm from '@/components/TaskForm/taskform';
+import './style.less';
 
 const { Text, Title } = Typography;
+const mauTagCoDinh = 'geekblue';
+const mauDoUuTien: Record<string, string> = {
+	Cao: 'red',
+	'Trung bình': 'blue',
+	Thấp: 'green',
+};
+
+const mauTrangThai: Record<string, string> = {
+	'Cần làm': 'blue',
+	'Đang làm': 'green',
+	'Hoàn thành': 'red',
+};
 
 const QuanLyCongViecPage: React.FC = () => {
 	const {
@@ -25,9 +38,9 @@ const QuanLyCongViecPage: React.FC = () => {
 	}, []);
 
 	return (
-		<div>
-			<Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
-				<Title level={4} style={{ margin: 0 }}>
+		<div className='congviec-page-container'>
+			<Space className='congviec-page-header'>
+				<Title level={4} className='congviec-page-title'>
 					Quản lý công việc
 				</Title>
 				<Space>
@@ -52,11 +65,11 @@ const QuanLyCongViecPage: React.FC = () => {
 			) : (
 				<Row gutter={[16, 16]}>
 					{danhSachTask.map((task) => (
-						<Col xs={24} md={12} xl={8} key={task.id} style={{ display: 'flex' }}>
+						<Col xs={24} md={12} xl={8} key={task.id} className='congviec-task-col'>
 							<Card
 								title={task.tenTask}
-								extra={<Tag>{task.trangThai}</Tag>}
-								style={{ width: '100%', display: 'flex', flexDirection: 'column' }}
+								extra={<Tag color={mauTrangThai[task.trangThai]}>{task.trangThai}</Tag>}
+								className='congviec-task-card'
 								bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column' }}
 								actions={[
 									<EditOutlined key='edit' onClick={() => moFormSua(task)} />,
@@ -71,13 +84,20 @@ const QuanLyCongViecPage: React.FC = () => {
 									</Popconfirm>,
 								]}
 							>
-								<Space direction='vertical' size={8} style={{ flex: 1 }}>
+								<Space direction='vertical' size={8} className='congviec-task-content'>
 									<Text>{task.moTa || 'Không có mô tả'}</Text>
-									<Text type='secondary'>Deadline: {new Date(task.deadline).toLocaleString()}</Text>
-									<Text type='secondary'>Độ ưu tiên: {task.doUuTien}</Text>
+									<Text>
+										Deadline: {new Date(task.deadline).toLocaleString()}
+									</Text>
+									<Space>
+										<Text type='secondary'>Độ ưu tiên:</Text>
+										<Tag color={mauDoUuTien[task.doUuTien]}>{task.doUuTien}</Tag>
+									</Space>
 									<Space wrap>
 										{task.tags.map((tag) => (
-											<Tag key={`${task.id}-${tag}`}>{tag}</Tag>
+											<Tag color={mauTagCoDinh} key={`${task.id}-${tag}`}>
+												{tag}
+											</Tag>
 										))}
 									</Space>
 								</Space>

@@ -4,6 +4,7 @@ import { useLocation, useModel } from 'umi';
 import TaskForm from '@/components/TaskForm/taskform';
 import TaskTable from '@/components/TaskTable/tasktable';
 import { type TrangThaiTask } from '@/services/TaskLocal/tasklocalservice';
+import './style.less';
 
 const { Title } = Typography;
 
@@ -36,9 +37,9 @@ const DanhSachCongViecPage: React.FC = () => {
 	}, []);
 
 	return (
-		<div>
-			<Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
-				<Title level={4} style={{ margin: 0 }}>
+		<div className='congviec-page-container'>
+			<Space className='congviec-page-header'>
+				<Title level={4} className='congviec-page-title'>
 					Danh sách task
 				</Title>
 				<Space>
